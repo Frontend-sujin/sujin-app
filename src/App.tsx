@@ -1,5 +1,6 @@
 import './App.css';
 import Button from './components/Button/Button';
+import Tooltip from './components/Tooltip/Tooltip';
 import { Form, Form2 } from './examples/forwardRef';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
          </Button>
          <Form></Form>
          <Form2></Form2>
+         <Tooltip content="툴팁입니다!" />
       </>
    );
 }
