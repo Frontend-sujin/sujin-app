@@ -2,6 +2,7 @@ import * as React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { buttonVariants } from './variants';
 import { cn } from '../../helpers/utils';
+import styled from 'styled-components';
 
 /* ---------------------------------- Types --------------------------------- */
 interface ButtonType {
@@ -37,6 +38,11 @@ interface ButtonType {
    shape?: 'rounded' | 'square';
 
    /*
+    * 버튼 클릭 이벤트 함수
+    */
+   onClick?: () => void;
+
+   /*
     * 아이콘만 포함한 버튼인지 여부
     */
    isIconOnly?: boolean;
@@ -60,6 +66,11 @@ interface ButtonType {
     * 버튼 스타일링을 위한 className
     */
    className?: string;
+
+   /*
+    * 클릭 시 토스트 띄우기
+    */
+   confirmButtonToast?: JSX.Element | null;
 }
 type ButtonProps =
    React.ButtonHTMLAttributes<HTMLButtonElement> &
@@ -87,7 +98,9 @@ const Button = React.forwardRef<
          before,
          after,
          children,
+         onClick,
          className,
+         confirmButtonToast,
          disabled = false,
          ...otherProps
       },
@@ -119,27 +132,35 @@ const Button = React.forwardRef<
       );
 
       return (
-         <button
-            ref={ref}
-            className={cn(
-               // buttonVariants({
-               //    size,
-               //    color,
-               //    variant,
-               //    shape,
-               // }),
-               variant === 'link' &&
-                  children &&
-                  'focus-visible:outline-0',
-               className,
-            )}
-            disabled={disabled}
-            {...otherProps}
-         >
-            {innerContent}
-         </button>
+         <StyledWrapper>
+            <button
+               ref={ref}
+               onClick={onClick}
+               className={cn(
+                  // buttonVariants({
+                  //    size,
+                  //    color,
+                  //    variant,
+                  //    shape,
+                  // }),
+                  variant === 'link' &&
+                     children &&
+                     'focus-visible:outline-0',
+                  className,
+               )}
+               disabled={disabled}
+               {...otherProps}
+            >
+               {innerContent}
+            </button>
+            {confirmButtonToast && confirmButtonToast}
+         </StyledWrapper>
       );
    },
 );
 
 export default Button;
+
+const StyledWrapper = styled.div`
+   position: relative;
+`;
