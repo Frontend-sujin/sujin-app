@@ -15,7 +15,7 @@ function App() {
          <Form></Form>
          <Form2></Form2>
          <Tooltip content="툴팁입니다!" /> */}
-         <ModalButton />
+         <ModalButton modalContents="안녕하세요. 모달이에요." />
       </>
    );
 }

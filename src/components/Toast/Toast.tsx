@@ -9,6 +9,10 @@ type PositionType =
    | 'random';
 
 interface Props {
+   setIsOpened: React.Dispatch<
+      React.SetStateAction<boolean>
+   >;
+
    children?: JSX.Element | string;
    position?: PositionType; // 전후좌우 위치 설정
 
@@ -24,14 +28,15 @@ interface Props {
 }
 
 const Toast = ({
+   setIsOpened,
    children,
    position = 'random',
    hasCancelButton = true,
    cancelButtonText = '취소',
-   cancelButtonClickEvent,
+   cancelButtonClickEvent = () => setIsOpened(false),
    hasConfirmButton = true,
    confirmButtonText = '확인',
-   confirmButtonClickEvent,
+   confirmButtonClickEvent = () => setIsOpened(false),
 }: Props) => {
    const positionType: PositionType[] = [
       'top',

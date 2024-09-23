@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Portal from '../Portal/Portal';
-import { useState } from 'react';
-import Toast from '../Toast.tsx/Toast';
+import ToastButton from '../Toast/ToastButton';
 import Button from '../Button/Button';
 
 interface Props {
@@ -27,10 +26,6 @@ interface Props {
    confirmToastText?: string; // 확인 버튼 클릭 시 띄워지는 토스트 텍스트
    confirmToastClickEvent?: () => void; // 확인 버튼 클릭 시 띄워지는 모달의 '확인' 버튼 클릭 시 실행되는 함수
 
-   /* 취소 버튼 클릭 시 띄워지는 토스트 (아직 구현 전) */
-   hasCancelToast?: boolean; // 취소 버튼 클릭 시 띄워지는 토스트 유무
-   cancelToastText?: string; // 취소 버튼 클릭 시 띄워지는 토스트 텍스트
-
    children?: JSX.Element | string;
 }
 
@@ -48,30 +43,7 @@ const Modal = ({
    hasConfirmToast = true,
    confirmToastText = '정말 하시겠습니까?',
    confirmToastClickEvent,
-   hasCancelToast = true,
-   cancelToastText = '',
 }: Props) => {
-   const [isOpenedConfirmToast, setIsOpenedConfirmToast] =
-      useState(false);
-
-   const ConfirmToast = (
-      <Toast
-         cancelButtonClickEvent={() =>
-            setIsOpenedConfirmToast(false)
-         }
-         confirmButtonClickEvent={
-            confirmToastClickEvent
-               ? confirmToastClickEvent
-               : () => {
-                    setIsOpened(false);
-                    setIsOpenedConfirmToast(false);
-                 }
-         }
-      >
-         {confirmToastText}
-      </Toast>
-   );
-
    return (
       isOpened && (
          <Portal>
@@ -99,24 +71,22 @@ const Modal = ({
                            <>{cancelButtonText}</>
                         </Button>
                      )}
-                     {hasConfirmButton && (
-                        <Button
-                           onClick={
-                              hasConfirmToast
-                                 ? () =>
-                                      setIsOpenedConfirmToast(
-                                         true,
-                                      )
-                                 : confirmButtonClickEvent
-                           }
-                           confirmButtonToast={
-                              isOpenedConfirmToast
-                                 ? ConfirmToast
-                                 : null
-                           }
+                     {hasConfirmButton &&
+                     hasConfirmToast ? (
+                        <ToastButton
+                           confirmButtonClickEvent={() => {
+                              setIsOpened(false);
+                              confirmToastClickEvent &&
+                                 confirmToastClickEvent();
+                           }}
+                           toastContents={confirmToastText}
                         >
                            <>{confirmButtonText}</>
-                        </Button>
+                        </ToastButton>
+                     ) : (
+                        <Button
+                           onClick={confirmButtonClickEvent}
+                        ></Button>
                      )}
                   </div>
                </section>
